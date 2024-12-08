@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jeopardy Game</title>
+</head>
+<body>
+    <h1>Jeopardy Game</h1>
+
+   <div class="player-info">
+        <div id="playerName"></div>
+    </div>
+<p>Your Score: <span id="score">100</span></p>
+
+    <div class="jeopardy-board">
+        <div class="jeopardy-category">Music</div>
+        <div class="jeopardy-category">Television</div>
+        <div class="jeopardy-category">Food-Drink</div>
+        <div class="jeopardy-category">Sports</div>
+        <div class="jeopardy-category">Holiday</div>
+    
+      <div class="jeopardy-cell" onclick="askQuestion('Music',100)">$100</div>
+        <div class="jeopardy-cell"  onclick="askQuestion('Television',100)">$100</div>
+        <div class="jeopardy-cell" onclick="askQuestion('Food',100)">$100</div>
+        <div class="jeopardy-cell"  onclick="askQuestion('Sports',100)">$100</div>
+        <div class="jeopardy-cell"  onclick="askQuestion('Holiday',100)">$100</div>
+        
+        <div class="jeopardy-cell" onclick="askQuestion('Music',200)">$200</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Television',200)">$200</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Food',200)">$200</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Sports',200)">$200</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Holiday',200)">$200</div>
+         <!--300 tile-->
+        <div class="jeopardy-cell" onclick="askQuestion('Music',300)">$300</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Television',300)">$300</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Food',300)">$300</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Sports',300)">$300</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Holiday',300)">$300</div>
+        <!--400 tile-->
+        <div class="jeopardy-cell"onclick="askQuestion('Music',400)">$400</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Television',400)">$400</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Food',400)">$400</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Sports',400)">$400</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Holiday',400)">$400</div>
+        <!--500 tile-->
+        <div class="jeopardy-cell"onclick="askQuestion('Music',500)">$500</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Television',500)">$500</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Food',500)">$500</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Sports',500)">$500</div>
+        <div class="jeopardy-cell"onclick="askQuestion('Holiday',500)">$500</div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="question-text"></p>
+            <input type="text" id="answer">
+            <button onclick="checkAnswer()">Answer</button>
+            <button onclick="forfeitQuestion()">Forfeit</button>
+            <button onclick="revealAnswer()">Reveal Answer</button>
+            <p id="timer">Time left: 60</p>
+        </div>
+    </div>
+
+    
+
+    <script>
+
+document.addEventListener('DOMContentLoaded',function()
+{
+   var params= new URLSearchParams(window.location.search);
+   var playerName= params.get('name');
+
+   var playerNameElemnt=document.getElementById('playerName');
+   playerNameElemnt.textContent=playerName;
+});
+
+
+
+        let currentPoints = 100;
+        let currentCategory = '';
+        let timer;
+        let playerTotal=100;
+      
+
+        // Define questions and answers
+        const questions = {
+           Music: {
+        100: {
+            question: 'This country/pop singer had three songs that appeared on Billboard’s Top 20 songs of 2015; one such title was her top hit, “Bad Blood”.',
+            answer: 'Taylor Swift',
+        },
+        200: {
+            question: 'Ufologists’ knowledge was used for this Nicki Minaj song mentioning how these celestial objects were “meant to fly”.',
+            answer: 'Starships',
+        },
+        300: {
+            question: 'What\'s the name of Destiny\'s Child\'s debut album?',
+            answer: 'Destiny\'s Child',
+        },
+        400: {
+            question: 'What year did Britney Spears release her hit song “Toxic”?',
+            answer: '2003',
+        },
+        500: {
+            question: 'Who sang the theme song for Titanic?',
+            answer: 'Celine Dion',
+        }
+    },
+    Television: {
+        100: {
+            question: 'The Shinigami is in love with apples. Can you recall his name?',
+            answer: 'Ryuk',
+        },
+        200: {
+            question: 'This famous American sitcom featured a Superman reference in every episode.',
+            answer: 'Seinfeld',
+        },
+        300: {
+            question: 'On “Family Guy,” what musical instrument does Lois Griffin teach?',
+            answer: 'Piano',
+        },
+        400: {
+            question: 'What is the parallel universe featured in “Stranger Things” called?',
+            answer: 'The Upside Down',
+        },
+        500: {
+            question: 'On “Dear White People,” what is the name of the college?',
+            answer: 'Winchester College',
+        }
+    },
+    // Add other categories with their questions
+   
+    Food: {
+        100: {
+            question: 'Galao is a coffee drink originating in this country.',
+            answer: 'Portugal',
+        },
+        200: {
+            question: 'I\'m a fiery addition to Jamaican dishes.',
+            answer: 'Scotch Bonnet',
+        },
+        300: {
+            question: 'A drink made from a bean. Helps you wake up.',
+            answer: 'Coffee',
+        },
+        400: {
+            question: 'It is meat from a cow?',
+            answer: 'Steak',
+        },
+        500: {
+            question: 'What spice will you find in Curry?',
+            answer: 'Ginger',
+        },
+        // Add more values as needed
+    },
+
+    Sports: {
+        100: {
+            question: 'What does NBA stand for?',
+            answer: 'National Basketball Association',
+        },
+        200: {
+            question: 'The bobsleigh team of which nation was the film ‘Cool Runnings’ focused on?',
+            answer: 'Jamaica',
+        },
+        300: {
+            question: 'How many players are on a baseball team?',
+            answer: '9',
+        },
+        400: {
+            question: 'What is the only sport to be played on the moon?',
+            answer: 'Golf',
+        },
+        500: {
+            question: 'In what game is "love" a score?',
+            answer: 'Tennis',
+        },
+        // Add more values as needed
+    },
+    
+    Holiday: {
+        100: {
+            question: 'This song is a traditional tune sung in the movie “Mean Girls” during the holiday talent show.',
+            answer: 'Jingle Bell Rock',
+        },
+        200: {
+            question: 'In the song “Jingle Bells,” how many horses are pulling the sleigh?',
+            answer: 'One',
+        },
+        300: {
+            question: 'What’s the highest grossing Christmas movie of all time?',
+            answer: 'The Grinch',
+        },
+        400: {
+            question: 'Deep-fried latkes are typically eaten around which Jewish holiday?',
+            answer: 'Hanukkah',
+        },
+        500: {
+            question: 'What spice will you find in Curry?',
+            answer: 'Ginger',
+        },
+        // Add more values as needed
+    },
+    
+};
+
+
+
+function askQuestion(category, points) {
+            // Clear previous timer
+            clearInterval(timer);
+
+            currentCategory = category;
+            const questionData = questions[category][points];
+            document.getElementById('question-text').textContent = `(${currentCategory}) Question for $${points}: ${questionData.question}`;
+            currentPoints = points;
+
+            document.getElementById('myModal').style.display = 'block';
+
+            // Start a 60-second timer
+            let timeLeft = 60;
+            document.getElementById('timer').textContent = `Time left: ${timeLeft}`;
+            timer = setInterval(function () {
+                timeLeft--;
+                if (timeLeft >= 0) {
+                    document.getElementById('timer').textContent = `Time left: ${timeLeft}`;
+                }
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    alert('Time is up! You lost $' + currentPoints + '.');
+                    updateScore(-currentPoints);
+                    document.getElementById('myModal').style.display = 'none';
+                    document.getElementById('answer').value = '';
+                    // Enable the question on the board again
+                    enableQuestionOnBoard();
+                }
+            }, 1000);
+
+            // Disable the clicked question on the board
+            disableQuestionOnBoard();
+        }
+
+        function enableQuestionOnBoard() {
+            // Enable the question on the board by removing the disabled attribute
+            const questionCell = document.querySelector(`.jeopardy-cell[onclick="askQuestion('${currentCategory}',${currentPoints})"]`);
+            if (questionCell) {
+                questionCell.removeAttribute('disabled');
+            }
+        }
+
+        function disableQuestionOnBoard() {
+            // Disable the question on the board by adding the disabled attribute
+            const questionCell = document.querySelector(`.jeopardy-cell[onclick="askQuestion('${currentCategory}',${currentPoints})"]`);
+            if (questionCell) {
+                questionCell.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        function checkAnswer() {
+    const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+    const questionData = questions[currentCategory][currentPoints];
+
+    if (userAnswer === questionData.answer.toLowerCase()) {
+        alert('Correct!');
+        updateScore(currentPoints);
+        // Remove the question from the board (disable it)
+        disableQuestionOnBoard();
+    } else {
+        alert('Incorrect! You lost $' + currentPoints + '.');
+
+        // Ask the user if they wish to know the answer
+        const revealAnswer = confirm('Do you want to reveal the answer?');
+        
+        if (revealAnswer) {
+            alert('The correct answer is: ' + questionData.answer);
+            // Remove the question from the board (disable it)
+            disableQuestionOnBoard();
+        }
+        // Player can return to the Board for another chance.
+    }
+        }
+
+        function forfeitQuestion() {
+            clearInterval(timer); // Stop the timer
+            alert('Question forfeited! You lost $' + currentPoints + '.');
+            updateScore(-currentPoints);
+            document.getElementById('myModal').style.display = 'none';
+            document.getElementById('answer').value = '';
+            // Enable the question on the board again
+            enableQuestionOnBoard();
+        }
+
+        function revealAnswer() {
+            clearInterval(timer); // Stop the timer
+            const questionData = questions[currentCategory][currentPoints];
+            alert('The correct answer is: ' + questionData.answer);
+            document.getElementById('myModal').style.display = 'none';
+            document.getElementById('answer').value = '';
+            // Disable the question on the board
+            disableQuestionOnBoard();
+        }
+
+        function updateScore(points) {
+            playerTotal += points;
+            document.getElementById('score').textContent = '$' + playerTotal;
+        }
+
+        function hasSuccessfullyAnsweredAllQuestions() {
+            for (const category in questions) {
+                for (const points in questions[category]) {
+                    if (!questions[category][points].answeredCorrectly) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        
+
+            //
+    </script>
+</body>
+</html>
+    </script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1c;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #player-name {
+            font-size: 20px;
+            color: #ffcc00;
+        }
+
+        .jeopardy-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 150px;
+        }
+
+        .jeopardy-category {
+            background-color: #0074cc;
+            padding: 20px;
+            font-weight: 800;
+            font-size: 1.6vw;
+            text-align: center;
+            border-radius: 5px;
+            border: 2px solid #005080;
+        }
+
+        .jeopardy-cell {
+    background-color: #010A78;
+    padding: 20px;
+    color:#D7A04B ;
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.8vw;
+    cursor: pointer;
+}
+
+        #myModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #010A78;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        #question-text {
+            color: #ffff;
+            margin-bottom: 15px;
+        }
+
+        #answer {
+            padding: 10px;
+            margin-bottom: 10px;
+            
+        }
+
+        button {
+            background-color: #0074cc;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            align-self: center;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        p#timer {
+            color: #ffcc00;
+            margin-top: 10px;
+        }
+
+        p#score {
+            font-size: 20px;
+            color: #ffcc00;
+        }
+
+        /* Add more styles as needed */
+    </style>
+</body>
+</html>
