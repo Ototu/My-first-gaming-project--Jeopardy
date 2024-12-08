@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+  <head>
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+   <!--javscript-->
+   <script src="script.js"></script>
+  </head>
+  <body>
+    <!--heading-->
+    <div class="jeopardy-container">
+        <div class="jeopardy-heading">
+            <span>J</span>
+            <span>E</span>
+            <span>O</span>
+            <span>P</span>
+            <span>A</span>
+            <span>R</span>
+            <span>D</span>
+            <span>Y</span>
+            <span>!</span>
+        </div>
+        <!--User interface Options-->
+        <div class="buttons">
+            <button id="soloButton" onclick="showRegistrationForm()">Solo</button>
+            <br>
+            <button id="multiplayerButton" disabled>Multiplayer</button>
+            <br>
+            <button id="playButton"  href=Jepordy.html onclick="play()" disabled>Play</button>
+            <br>
+            <button id="exitButton" onclick="Exit()">Exit</button>
+        </div>
+    </div>
+    <!--Register-->
+    <div id="registrationForm" class="registration-form" style="display: none;">
+        <h3>Registration Form</h3>
+        <input type="text" id="nameInput" placeholder="Player's name">
+        <input type="date" id="dobInput" placeholder="Date of Birth">
+        <input type="email"id="emailInput" placeholder="Email Address">
+        <select id="genderInput">
+            <option value="" disabled selected>Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="text" id="townInput" placeholder="Town">
+        <input type="text" id="educationInput" placeholder="Educational Level">
+        <div class="button-group">
+            <button id="registerButton" onclick="registerSoloPlayer()">Register</button>
+            <button id="cancelButton" onclick="cancelRegistration()">Cancel</button>
+        </div>
+    </div>
+  </body>
+</html>
