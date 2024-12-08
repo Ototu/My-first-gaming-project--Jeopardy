@@ -1,0 +1,37 @@
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: black; /* Blue background color */
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.jeopardy-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 8px;
+    margin: 150px;
+}
+
+.jeopardy-category {
+    background-color: #010A78; /* Darker blue for categories */
+    padding: 20px;
+    color: white;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.6vw;
+}
+
+.jeopardy-cell {
+    background-color: #010A78;
+    padding: 20px;
+    color:#D7A04B ;
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.8vw;
+    cursor: pointer;
+}
+
+.jeopardy-cell:hover {
+    background-color: #010A78;
+}
